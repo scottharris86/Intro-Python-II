@@ -50,7 +50,7 @@ while not verb == 'q':
     print(f"your currently in room: {player.current_room.name}")
     print(f"{player.current_room.description}")
     print(f"available items are: {[item.name for item in player.current_room.items]}")
-    user_input = input("Enter a Command: [n] move north, [s] move south, [e] move east, [w] move west [q] quit\n")
+    user_input = input("Enter a Command: [n] move north, [s] move south, [e] move east, [w] move west [get] <item name> [drop] <item name> [i] inventory [q] quit\n")
     split_word = user_input.split(" ")
     verb = split_word[0]
     if len(split_word) > 1:
@@ -89,7 +89,18 @@ while not verb == 'q':
     elif verb == 'get':
         for item in player.current_room.items:
             if item.name == object_name:
-                print(f"you picked up a {item.name}")
+                player.current_room.items.remove(item)
+                player.items.append(item)
+                item.on_take()
+
+    elif verb == 'drop':
+        for item in player.items:
+            if item.name == object_name:
+                player.items.remove(item)
+                player.current_room.items.append(item)
+                item.on_drop()
+    elif verb == "i":
+        print(f"inventory: {[item.name for item in player.items]}")
     else:
        print("Unrecognized input. Try again!") 
 
